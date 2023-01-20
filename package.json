@@ -2,22 +2,22 @@
   "name": "fso-part4",
   "version": "1.0.0",
   "description": "",
+  "author": "Shubhankar Seth",
+  "homepage": "https://github.com/sseth/fullstackopen-part4",
   "scripts": {
+    "lint": "eslint .",
+    "deploy": "fly deploy",
+    "test": "jest --verbose",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy:backend": "fly deploy",
+    "predeploy": "npm run build:ui",
+    "build:ui": "rm -rf ./build && cd <frontend path> && npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sseth/fullstackopen-part4.git"
   },
-  "keywords": [],
-  "author": "Shubhankar Seth",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/sseth/fullstackopen-part4/issues"
-  },
-  "homepage": "https://github.com/sseth/fullstackopen-part4#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -26,6 +26,10 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "eslint": "^8.32.0"
+    "eslint": "^8.32.0",
+    "jest": "^29.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
