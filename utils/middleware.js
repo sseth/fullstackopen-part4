@@ -6,13 +6,13 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'CastError')
     return res.status(400).send({ error: 'invalid id' });
 
-  if (error.name === 'MongoServerError')
+  if (error.name === 'MongoServerError' || error.name === 'BadRequest')
     return res.status(400).json({ error: error.message });
 
   if (error.name === 'ValidationError') {
     const msg = error.message.slice(
-      error.message.startsWith('Person')
-        ? 'Person validation failed: '.length
+      error.message.startsWith('Blog')
+        ? 'Blog validation failed: '.length
         : 'Validation failed: '.length
     );
     return res.status(400).json({ error: { type: 'validation', msg } });

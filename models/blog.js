@@ -2,10 +2,22 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 
 const blog = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
+  title: {
+    type: String,
+    required: true,
+  },
+  author: {
+    type: String,
+    default: 'Anonymous',
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  likes: {
+    type: Number,
+    default: 0,
+  },
 });
 
 blog.set('toJSON', {
