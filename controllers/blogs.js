@@ -1,33 +1,46 @@
 const blogsRouter = require('express').Router();
+const { userExtractor } = require('../utils/middleware');
 
-const Blog = require('../models/blog');
-const BadRequestError = require('../utils/custom_error');
+const { Blog, User } = require('../models');
+const {
+  BadRequestError,
+  UnauthorizedError,
+} = require('../utils/custom_errors');
 
 const getAll = async (req, res) => {
-  const blogs = await Blog.find({});
+  const blogs = await Blog.find({}).populate('user', { name: 1, username: 1 });
   res.json(blogs);
 };
 
 const createPost = async (req, res) => {
   const b = req.body;
 
+  const user = await User.findById(req.user.id);
   const blog = new Blog({
     url: b.url,
     title: b.title,
     likes: b.likes,
-    author: b.author,
+    author: b.author || user.name,
+    user: req.user.id,
   });
 
   const savedBlog = await blog.save();
+  user.blogs.push(savedBlog._id);
+  await user.save();
+
   res.status(201).json(savedBlog);
 };
 
 const removePost = async (req, res) => {
   const { id } = req.params;
-  const post = await Blog.findByIdAndDelete(id);
+  const post = await Blog.findById(id);
+  if (!post) return res.status(204).end();
 
-  if (post) res.end();
-  else res.status(204).end();
+  if (!(post.user && post.user.toString() === req.user.id))
+    throw new UnauthorizedError('no.');
+
+  await post.remove();
+  res.end();
 };
 
 const editPost = async (req, res) => {
@@ -48,7 +61,9 @@ const editPost = async (req, res) => {
   res.json(updatedPost);
 };
 
-blogsRouter.route('/').get(getAll).post(createPost);
+blogsRouter.get('/', getAll);
+blogsRouter.use(userExtractor);
+blogsRouter.post('/', createPost);
 blogsRouter.route('/:id').delete(removePost).put(editPost);
 
 module.exports = blogsRouter;

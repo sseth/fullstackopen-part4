@@ -8,7 +8,11 @@ const blog = new mongoose.Schema({
   },
   author: {
     type: String,
-    default: 'Anonymous',
+    default: 'Anonymous'
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   url: {
     type: String,
