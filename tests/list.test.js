@@ -34,4 +34,40 @@ describe('most liked of', () => {
   });
 });
 
-// TODO: 4.6, 4.7
+describe('author with the most blogs', () => {
+  test('for an empty list: undefined', () => {
+    expect(helper.mostBlogs([]).author).toEqual(undefined);
+    expect(helper.mostBlogs([]).blogs).toEqual(0);
+  });
+
+  test('for a list with one blog: blogs[0].author', () => {
+    expect(helper.mostBlogs(listWithOneBlog).author).toEqual(
+      listWithOneBlog[0].author
+    );
+    expect(helper.mostBlogs(listWithOneBlog).blogs).toEqual(1);
+  });
+
+  test('for a list with many blogs', () => {
+    expect(helper.mostBlogs(blogs).author).toEqual('Robert C. Martin');
+    expect(helper.mostBlogs(blogs).blogs).toEqual(3);
+  });
+});
+
+describe('author with the most likes', () => {
+  test('for an empty list: undefined', () => {
+    expect(helper.mostLikes([]).author).toEqual(undefined);
+    expect(helper.mostLikes([]).likes).toEqual(0);
+  });
+
+  test('for a list with one blog: blogs[0].author', () => {
+    expect(helper.mostLikes(listWithOneBlog).author).toEqual(
+      listWithOneBlog[0].author
+    );
+    expect(helper.mostLikes(listWithOneBlog).likes).toEqual(listWithOneBlog[0].likes);
+  });
+
+  test('for a list with many blogs', () => {
+    expect(helper.mostLikes(blogs).author).toEqual('Edsger W. Dijkstra');
+    expect(helper.mostLikes(blogs).likes).toEqual(17);
+  });
+});

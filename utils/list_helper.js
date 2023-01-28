@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const dummy = () => {
   return 1;
 };
@@ -10,19 +12,41 @@ const favoriteBlog = (blogs) => {
   let maxIndex = 0;
   blogs.forEach((blog, i) => {
     // console.log(blog.likes, blogs[maxIndex].likes);
-    if (blog.likes > blogs[maxIndex].likes)
-      maxIndex = i;
+    if (blog.likes > blogs[maxIndex].likes) maxIndex = i;
   });
   // console.log(maxIndex);
   return blogs[maxIndex];
 };
 
 const mostBlogs = (blogs) => {
-  console.log(blogs);
+  const counts = _.countBy(blogs, 'author');
+  let author;
+  let max = 0;
+  for (let a in counts) {
+    if (counts[a] > max) {
+      author = a;
+      max = counts[a];
+    }
+  }
+
+  return { author, blogs: max };
 };
 
 const mostLikes = (blogs) => {
-  console.log(blogs);
+  const authors = _.uniqBy(blogs, 'author').map((b) => b.author);
+  let author;
+  let max = 0;
+  authors.forEach((a) => {
+    const likes = _.sumBy(blogs, (b) => {
+      if (b.author === a) return b.likes;
+    });
+    if (likes > max) {
+      author = a;
+      max = likes;
+    }
+  });
+
+  return { author, likes: max };
 };
 
 const listWithOneBlog = [
