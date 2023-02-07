@@ -28,7 +28,7 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).json({ error: { type: 'validation', msg } });
   }
 
-  if (error.name === 'Unauthorized')
+  if (error.name === 'Unauthorized' || error.name === 'TokenExpiredError')
     return res.status(401).json({ error: error.message });
 
   next(error);

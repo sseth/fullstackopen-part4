@@ -6,7 +6,11 @@ const logger = require('./utils/logger');
 const { MONGO_URI } = require('./utils/config');
 
 const middleware = require('./utils/middleware');
-const { blogsRouter, usersRouter, loginRouter } = require('./controllers');
+const {
+  blogsRouter,
+  usersRouter,
+  loginRouter,
+} = require('./controllers');
 
 const app = express();
 
@@ -25,6 +29,12 @@ app.use('/api/login', loginRouter);
 app.use(middleware.tokenExtractor);
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
+
+if (process.env.NODE_ENV === 'test') {
+  logger.info('here');
+  const testingRouter = require('./controllers/testing');
+  app.use('/api/testing', testingRouter);
+}
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
